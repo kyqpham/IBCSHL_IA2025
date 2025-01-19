@@ -9,6 +9,10 @@ public class PastTasksPage extends TasksPage {
         super(mainGUI);
         title.setText("Past Tasks List");
 
+        // removing unnecessary components
+        remove(createNewListButton);
+        remove(editListButton);
+
     }
     
 }
