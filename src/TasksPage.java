@@ -23,6 +23,9 @@ public class TasksPage extends JPanel {
     protected JButton createNewListButton;
     protected JButton editListButton;
 
+    // adding a new task
+    private TaskEntryPage addTaskPage;
+
     public TasksPage(GUI mainGUI) {
         // setting the layout for the panel
         setLayout(null);
@@ -90,7 +93,6 @@ public class TasksPage extends JPanel {
         add(createNewListButton);
         add(editOptions);
 
-
         // adding functionality to the return home button
         returnHome.addActionListener(new ActionListener() {
             @Override
@@ -103,6 +105,14 @@ public class TasksPage extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 editOptions.show(editListButton, editListButton.getWidth() / 2, -125);
+            }
+        });
+
+        addTaskButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TaskEntryPage taskEntryDialog = new TaskEntryPage(mainGUI.getFrame());
+                taskEntryDialog.setVisible(true);
             }
         });
     }

@@ -43,4 +43,8 @@ public class GUI {
     public void switchToPanel(String panelName) {
         cardLayout.show(mainPanel, panelName);
     }
+
+    public JFrame getFrame() {
+        return frame;
+    }
 }
