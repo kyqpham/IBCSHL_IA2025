@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class TaskEntryPage extends JDialog {
     private JPanel panel;
@@ -19,11 +20,18 @@ public class TaskEntryPage extends JDialog {
     private JTextField taskDeadlineInput;
     private JTextField taskDescriptionInput;
 
+    // accessing task list
+    private TasksPage currentData;
+
     // finish button
     private JButton finishTask;
 
-    public TaskEntryPage(JFrame parent) {
+    public TaskEntryPage(JFrame parent, TasksPage x) {
         super(parent, "Enter Task Details", true); 
+
+        // grabbing the data from the task page for necessary use
+        currentData = x;
+
         setLayout(new BorderLayout());
 
         // setting the dialogue
@@ -108,7 +116,10 @@ public class TaskEntryPage extends JDialog {
                 String taskDeadline = taskDeadlineInput.getText();
                 String taskDescription = taskDescriptionInput.getText();
 
-                System.out.println("Task added: " + taskName + ", " + taskPriority + ", " + taskDuration + ", " + taskDeadline + ", " + taskDescription);
+                // adding the tasks to the local data list, returned to the task page list
+                // tasks page should be refreshed to reflect the change
+                currentData.getDailyTasks().add(taskName);
+                currentData.refreshTasklist(currentData.getDailyTasks());
 
                 dispose(); 
             }

@@ -111,9 +111,26 @@ public class TasksPage extends JPanel {
         addTaskButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TaskEntryPage taskEntryDialog = new TaskEntryPage(mainGUI.getFrame());
+                TaskEntryPage taskEntryDialog = new TaskEntryPage(mainGUI.getFrame(), getCurrentData());
                 taskEntryDialog.setVisible(true);
             }
         });
+    }
+
+    // returning the access to data
+    public TasksPage getCurrentData () {
+        return this;
+    }
+
+    public ArrayList<String> getDailyTasks () {
+        return dailyTasks;
+    }
+
+    // refreshing the page to show any changes
+    public void refreshTasklist (ArrayList<String> updatedTasks) {
+        taskListModel.clear();    
+        for (String tasks : dailyTasks) {
+            taskListModel.addElement(tasks);
+        }
     }
 }
