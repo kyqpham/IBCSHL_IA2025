@@ -119,7 +119,7 @@ public class TaskEntryPage extends JDialog {
                 // adding the tasks to the local data list, returned to the task page list
                 // tasks page should be refreshed to reflect the change
                 currentData.getDailyTasks().add(taskName);
-                currentData.refreshTasklist(currentData.getDailyTasks());
+                currentData.refreshTasklist(currentData.getDailyTasks(), currentData.taskListModel, currentData.getDailyTasks());
 
                 dispose(); 
             }

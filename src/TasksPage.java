@@ -8,9 +8,10 @@ public class TasksPage extends JPanel {
     // declaring parameters for the panel itself
     protected JLabel title;
     private JButton returnHome;
-    private JList<String> taskList;
-    private ArrayList<String> dailyTasks;
-    private DefaultListModel<String> taskListModel;
+
+    protected JList<String> taskList;
+    protected ArrayList<String> dailyTasks;
+    protected DefaultListModel<String> taskListModel;
 
     // adding the elements for a popup for user selection of editing the task list
     private JPanel editPanel;
@@ -26,7 +27,13 @@ public class TasksPage extends JPanel {
     // adding a new task
     private TaskEntryPage addTaskPage;
 
-    public TasksPage(GUI mainGUI) {
+    // scroll pane for ui
+    protected JScrollPane scrollPane;
+
+    // necessary access data to transfer to past task list
+    private PastTasksPage currentData;
+
+    public TasksPage(GUI mainGUI, PastTasksPage pastTasksPage) {
         // setting the layout for the panel
         setLayout(null);
 
@@ -53,7 +60,7 @@ public class TasksPage extends JPanel {
 
         // jlist assumes the list model + is housed in a scrollpane
         taskList = new JList<>(taskListModel);
-        JScrollPane scrollPane = new JScrollPane(taskList);
+        scrollPane = new JScrollPane(taskList);
         scrollPane.setBounds(75, 60, 250, 200); 
 
         // declaring the buttons + setting bounds
@@ -78,6 +85,9 @@ public class TasksPage extends JPanel {
         deleteTaskButton.setBounds(75, 20, 130, 30); 
         editTaskButton.setBounds(75, 70, 130, 30);
         addTaskButton.setBounds(75, 120, 130, 30);
+
+        // declaring necessary values for data for transfer to past tasks
+        currentData = pastTasksPage;
 
         editPanel.add(deleteTaskButton);
         editPanel.add(editTaskButton);
@@ -115,6 +125,18 @@ public class TasksPage extends JPanel {
                 taskEntryDialog.setVisible(true);
             }
         });
+
+        createNewListButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentData.getPastTasks().add("example");
+                currentData.refreshTasklist(currentData.getPastTasks(), currentData.pastListModel, dailyTasks);
+
+                dailyTasks.clear();
+                refreshTasklist(dailyTasks, taskListModel, dailyTasks);
+        
+            }
+        });
     }
 
     // returning the access to data
@@ -127,10 +149,10 @@ public class TasksPage extends JPanel {
     }
 
     // refreshing the page to show any changes
-    public void refreshTasklist (ArrayList<String> updatedTasks) {
-        taskListModel.clear();    
-        for (String tasks : dailyTasks) {
-            taskListModel.addElement(tasks);
+    public void refreshTasklist (ArrayList<String> updatedTasks, DefaultListModel<String> x, ArrayList<String> y) {
+        x.clear();    
+        for (String tasks : y) {
+            x.addElement(tasks);
         }
     }
 }
