@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class PastTasksPage extends TasksPage {
     public DefaultListModel<String> pastListModel;
-    public ArrayList<String> pastTasks;
+    public ArrayList<Task> pastTasks;
     public JList<String> pastTaskList;
 
 
@@ -21,12 +21,13 @@ public class PastTasksPage extends TasksPage {
         remove(taskList);
         remove(scrollPane);
 
-        pastTasks = new ArrayList<String>();
-        pastTasks.add("example");
+        if (pastTasks == null) {
+            pastTasks = new ArrayList<Task>();
+        }
 
         pastListModel = new DefaultListModel<>();
-        for (String x:pastTasks) {
-            pastListModel.addElement(x);
+        for (Task x:pastTasks) {
+            pastListModel.addElement(x.getName());
         }
 
         pastTaskList = new JList<>(pastListModel);
@@ -38,7 +39,7 @@ public class PastTasksPage extends TasksPage {
         add(scrollPane);
     }
 
-    public ArrayList<String> getPastTasks() {
+    public ArrayList<Task> getPastTasks() {
         return pastTasks;
     }
 

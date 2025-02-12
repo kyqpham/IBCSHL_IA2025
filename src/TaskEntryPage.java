@@ -20,8 +20,10 @@ public class TaskEntryPage extends JDialog {
     private JTextField taskDeadlineInput;
     private JTextField taskDescriptionInput;
 
-    // accessing task list
+    // accessing task list + adding tasks
     private TasksPage currentData;
+    private Task newTask;
+    
 
     // finish button
     private JButton finishTask;
@@ -116,9 +118,20 @@ public class TaskEntryPage extends JDialog {
                 String taskDeadline = taskDeadlineInput.getText();
                 String taskDescription = taskDescriptionInput.getText();
 
+                // transferring the text to appropriate data types
+                int parsedTaskPriority = Integer.parseInt(taskPriority);
+                int parsedTaskDuration = Integer.parseInt(taskDuration);
+                double parsedTaskDeadline = Double.parseDouble(taskDeadline);
+
+                // creating new task + adding in the values
+                newTask = new Task(taskName, parsedTaskPriority, taskDescription, parsedTaskDeadline, parsedTaskDuration);
+
                 // adding the tasks to the local data list, returned to the task page list
                 // tasks page should be refreshed to reflect the change
-                currentData.getDailyTasks().add(taskName);
+                currentData.getDailyTasks().add(newTask);
+                currentData.quickSort(currentData.getDailyTasks(), 0, currentData.getDailyTasks().size()-1);
+               
+                // resorting the data based on priority via quicksort
                 currentData.refreshTasklist(currentData.getDailyTasks(), currentData.taskListModel, currentData.getDailyTasks());
 
                 dispose(); 

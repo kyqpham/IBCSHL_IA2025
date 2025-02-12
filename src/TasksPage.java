@@ -10,7 +10,7 @@ public class TasksPage extends JPanel {
     private JButton returnHome;
 
     protected JList<String> taskList;
-    protected ArrayList<String> dailyTasks;
+    public ArrayList<Task> dailyTasks;
     protected DefaultListModel<String> taskListModel;
 
     // adding the elements for a popup for user selection of editing the task list
@@ -48,14 +48,12 @@ public class TasksPage extends JPanel {
         dailyTasks = new ArrayList<>();
 
         // adding tasks to arraylist
-        dailyTasks.add("Example Task 1");
-        dailyTasks.add("Example Task 2");
-        dailyTasks.add("Example Task 3");
-
+        dailyTasks.add(new Task("Example Task"));
+    
         // create list mdoel and add tasks from araraylist
         taskListModel = new DefaultListModel<>();
-        for (String task : dailyTasks) {
-            taskListModel.addElement(task);
+        for (Task task : dailyTasks) {
+            taskListModel.addElement(task.getName());
         }
 
         // jlist assumes the list model + is housed in a scrollpane
@@ -129,7 +127,6 @@ public class TasksPage extends JPanel {
         createNewListButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                currentData.getPastTasks().add("example");
                 currentData.refreshTasklist(currentData.getPastTasks(), currentData.pastListModel, dailyTasks);
 
                 dailyTasks.clear();
@@ -144,15 +141,47 @@ public class TasksPage extends JPanel {
         return this;
     }
 
-    public ArrayList<String> getDailyTasks () {
+    public ArrayList<Task> getDailyTasks () {
         return dailyTasks;
     }
 
     // refreshing the page to show any changes
-    public void refreshTasklist (ArrayList<String> updatedTasks, DefaultListModel<String> x, ArrayList<String> y) {
+    public void refreshTasklist (ArrayList<Task> updatedTasks, DefaultListModel<String> x, ArrayList<Task> y) {
         x.clear();    
-        for (String tasks : y) {
-            x.addElement(tasks);
+        for (Task tasks : y) {
+            x.addElement(tasks.getName());
         }
     }
+
+    public void quickSort(ArrayList<Task> tasks, int start, int end) {
+        //base case for recursion
+        if (end <= start) {
+            return;
+        }
+    
+        int pivot = partition(tasks, start, end);
+        quickSort(tasks, start, pivot - 1);
+        quickSort(tasks, pivot + 1, end);
+    }
+    
+    public int partition(ArrayList<Task> tasks, int start, int end) {
+        int pivot = tasks.get(end).getPriority();
+        int i = start - 1;
+    
+        for (int j = start; j <= end -1; j++) {
+            if (tasks.get(j).getPriority() < pivot) {
+                i++;
+                Task temp = tasks.get(i);
+                tasks.set(i, tasks.get(j));
+                tasks.set(j, temp);
+            }
+        }
+        i++;
+        Task temp = tasks.get(i);
+        tasks.set(i, tasks.get(end));
+        tasks.set(end, temp);
+    
+        return i;
+    }
+
 }
