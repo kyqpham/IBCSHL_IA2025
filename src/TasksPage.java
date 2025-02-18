@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.Timer;
 
 // Extends JPanel so the tasks page is an actual panel
 public class TasksPage extends JPanel {
@@ -33,6 +34,10 @@ public class TasksPage extends JPanel {
     // necessary access data to transfer to past task list
     private PastTasksPage currentData;
 
+    // keeping track of the glowing function
+    private float glowIntensity = 0f;
+    private boolean increasing = true;
+
     public TasksPage(GUI mainGUI, PastTasksPage pastTasksPage) {
         // setting the layout for the panel
         setLayout(null);
@@ -46,9 +51,6 @@ public class TasksPage extends JPanel {
         returnHome.setBounds(150, 325, 100, 30); 
 
         dailyTasks = new ArrayList<>();
-
-        // adding tasks to arraylist
-        dailyTasks.add(new Task("Example Task"));
     
         // create list mdoel and add tasks from araraylist
         taskListModel = new DefaultListModel<>();
@@ -68,6 +70,10 @@ public class TasksPage extends JPanel {
         editListButton.setBounds(75, 270, 120, 30);
         createNewListButton.setBounds(200, 270, 120, 30);
         
+        // adding the custom renderer for the highlighting
+        GlowingListCellRenderer renderer = new GlowingListCellRenderer();
+        taskList.setCellRenderer(renderer);
+
         // declaring + instantiating the popup menu and its options
         //necessary panel for positioning of the editing buttons
         editPanel = new JPanel();
