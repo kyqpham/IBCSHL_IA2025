@@ -2,7 +2,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
-import javax.swing.Timer;
 
 // Extends JPanel so the tasks page is an actual panel
 public class TasksPage extends JPanel {
@@ -34,9 +33,8 @@ public class TasksPage extends JPanel {
     // necessary access data to transfer to past task list
     private PastTasksPage currentData;
 
-    // keeping track of the glowing function
-    private float glowIntensity = 0f;
-    private boolean increasing = true;
+    // timer parameter
+    private TaskReminder taskReminder;
 
     public TasksPage(GUI mainGUI, PastTasksPage pastTasksPage) {
         // setting the layout for the panel
@@ -99,6 +97,9 @@ public class TasksPage extends JPanel {
 
         editOptions.add(editPanel);
 
+        // adding + instantiating the timer 
+        taskReminder = new TaskReminder(dailyTasks);
+
         // adding components to the panel
         add(title);
         add(scrollPane);
@@ -140,6 +141,31 @@ public class TasksPage extends JPanel {
         
             }
         });
+
+        deleteTaskButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = taskList.getSelectedIndex();
+                if (selectedIndex != -1) { 
+                    dailyTasks.remove(selectedIndex);
+                    taskListModel.remove(selectedIndex); 
+                } 
+            }
+        });
+
+        editTaskButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = taskList.getSelectedIndex();
+                if (selectedIndex != -1) { 
+                    Task selectedTask = dailyTasks.get(selectedIndex);
+                    showEditTaskDialog(selectedTask, selectedIndex);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Select a task to edit.");
+                }
+            }
+        });
+
     }
 
     // returning the access to data
@@ -160,7 +186,7 @@ public class TasksPage extends JPanel {
     }
 
     public void quickSort(ArrayList<Task> tasks, int start, int end) {
-        //base case for recursion
+        // base case for recursion
         if (end <= start) {
             return;
         }
@@ -190,4 +216,63 @@ public class TasksPage extends JPanel {
         return i;
     }
 
+    private void showEditTaskDialog(Task task, int index) {
+        // creating jdialog to view details + edit
+        JDialog dialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Edit Task", true);
+        dialog.setSize(350, 300);
+        dialog.setLayout(new GridLayout(6, 2, 5, 5));
+        dialog.setTitle("Edit Tasks");
+    
+        // displaying the fields/data
+        JLabel nameLabel = new JLabel("Task Name:");
+        JTextField nameField = new JTextField(task.getName());
+    
+        JLabel priority = new JLabel("Priority:");
+        JTextField priorityInput = new JTextField(String.valueOf(task.getPriority()));
+    
+        JLabel description = new JLabel("Description:");
+        JTextField descriptionInput = new JTextField(task.getDescription());
+    
+        JLabel deadline = new JLabel("Deadline:");
+        JTextField deadlineInput = new JTextField(String.valueOf(task.getDeadline()));
+    
+        JLabel duration = new JLabel("Duration:");
+        JTextField durationInput = new JTextField(String.valueOf(task.getDuration()));
+    
+        // save button + updating to display changes
+        JButton saveButton = new JButton("Save Changes");
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                taskListModel.set(index, nameField.getText());
+                dailyTasks.set(index, new Task(
+                    nameField.getText(),
+                    Integer.parseInt(priorityInput.getText()),
+                    descriptionInput.getText(),
+                    Double.parseDouble(deadlineInput.getText()),
+                    Integer.parseInt(durationInput.getText())
+                ));
+    
+                dialog.dispose(); 
+            }
+        });
+    
+        // adding components to dialog
+        dialog.add(nameLabel);
+        dialog.add(nameField);
+        dialog.add(priority);
+        dialog.add(priorityInput);
+        dialog.add(description);
+        dialog.add(descriptionInput);
+        dialog.add(deadline);
+        dialog.add(deadlineInput);
+        dialog.add(duration);
+        dialog.add(durationInput);
+        dialog.add(new JLabel()); 
+        dialog.add(saveButton);
+    
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }
+    
 }
