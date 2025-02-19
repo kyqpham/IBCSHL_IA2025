@@ -14,7 +14,7 @@ public class TaskReminder {
         this.dailyTasks = dailyTasks;
 
         //set up a timer every 15 minutes (900,000 ms)
-        reminderTimer = new Timer(2000, new ActionListener() {
+        reminderTimer = new Timer(900_000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!dailyTasks.isEmpty()) {
